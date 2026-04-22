@@ -14,6 +14,12 @@ spec:
       labels:
         app: php-hello
     spec:
+{{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+{{- range . }}
+        - name: {{ . | quote }}
+{{- end }}
+{{- end }}
 {{- if .Values.vault.enabled }}
       initContainers:
         - name: vault-env

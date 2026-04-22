@@ -9,6 +9,16 @@ spec:
     repoURL: https://github.com/Vanesstalkers/gitops_configs.git
     targetRevision: master
     path: charts/php-hello
+    helm:
+      parameters:
+        - name: image.repository
+          value: 172.17.0.1:18082/php-hello
+        - name: image.tag
+          value: nexus-v1
+        - name: image.pullPolicy
+          value: Always
+        - name: image.pullSecrets[0]
+          value: nexus-regcred
   destination:
     server: https://kubernetes.default.svc
     namespace: php-hello

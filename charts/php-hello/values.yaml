@@ -1,9 +1,11 @@
 replicaCount: 1
 
 image:
-  repository: php-hello
-  tag: "local2"
-  pullPolicy: IfNotPresent
+  repository: 172.17.0.1:18082/php-hello
+  tag: "nexus-v1"
+  pullPolicy: Always
+  pullSecrets:
+    - nexus-regcred
 
 vault:
   enabled: true
