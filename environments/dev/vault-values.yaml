@@ -1,0 +1,11 @@
+global:
+  enabled: true
+
+injector:
+  enabled: true
+
+server:
+  dev:
+    enabled: true
+  service:
+    type: ClusterIP

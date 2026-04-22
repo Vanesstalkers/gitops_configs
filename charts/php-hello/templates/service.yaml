@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-hello
+  labels:
+    app: php-hello
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: php-hello
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      nodePort: {{ .Values.service.nodePort }}

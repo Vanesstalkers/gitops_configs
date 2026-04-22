@@ -1,0 +1,22 @@
+replicaCount: 1
+
+image:
+  repository: php-hello
+  tag: "local2"
+  pullPolicy: IfNotPresent
+
+vault:
+  enabled: true
+  role: "php-hello"
+  secretPath: "secret/data/php-hello/config"
+  envTemplate: |
+    {{- with secret "secret/data/php-hello/config" -}}
+    export APP_ENV="{{ .Data.data.APP_ENV }}"
+    export APP_MESSAGE="{{ .Data.data.APP_MESSAGE }}"
+    {{- end }}
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 80
+  nodePort: 30081

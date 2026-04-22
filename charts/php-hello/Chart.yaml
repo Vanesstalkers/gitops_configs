@@ -1,0 +1,6 @@
+apiVersion: v2
+name: php-hello
+description: Simple PHP hello app for k3s
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
