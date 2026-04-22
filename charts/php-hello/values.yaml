@@ -1,18 +1,15 @@
 replicaCount: 1
-
 image:
   repository: 172.17.0.1:18082/php-hello
-  tag: "nexus-v1"
+  tag: "nexus-v2"
   pullPolicy: Always
   pullSecrets:
-    - nexus-regcred
-
+  - nexus-regcred
 vault:
   enabled: true
   address: "http://172.17.0.1:8201"
   token: "root"
   secretPath: "secret/php-hello/config"
-
 service:
   type: NodePort
   port: 80
