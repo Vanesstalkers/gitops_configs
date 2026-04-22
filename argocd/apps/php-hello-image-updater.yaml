@@ -1,0 +1,23 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: php-hello-image-updater
+  namespace: argocd
+spec:
+  writeBackConfig:
+    method: git:repocreds
+    gitConfig:
+      branch: master
+      writeBackTarget: "helmvalues:/charts/php-hello/values.yaml"
+  commonUpdateSettings:
+    updateStrategy: newest-build
+    allowTags: "regexp:^nexus-v[0-9]+$"
+  applicationRefs:
+    - namePattern: php-hello
+      images:
+        - alias: phphello
+          imageName: 172.17.0.1:18082/php-hello
+          manifestTargets:
+            helm:
+              name: image.repository
+              tag: image.tag
