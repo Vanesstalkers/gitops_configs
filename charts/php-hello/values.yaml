@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: 172.17.0.1:18082/php-hello
-  tag: "nexus-v2"
+  tag: "nexus-v3"
   pullPolicy: Always
   pullSecrets:
   - nexus-regcred
