@@ -7,6 +7,8 @@ image:
 
 vault:
   enabled: true
+  address: "http://172.17.0.1:8201"
+  authPath: "auth/kubernetes"
   role: "php-hello"
   secretPath: "secret/data/php-hello/config"
   envTemplate: |
