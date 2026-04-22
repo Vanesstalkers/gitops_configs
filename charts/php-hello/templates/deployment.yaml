@@ -13,18 +13,23 @@ spec:
     metadata:
       labels:
         app: php-hello
-{{- if .Values.vault.enabled }}
-      annotations:
-        vault.hashicorp.com/agent-inject: "true"
-        vault.hashicorp.com/service: {{ .Values.vault.address | quote }}
-        vault.hashicorp.com/auth-path: {{ .Values.vault.authPath | quote }}
-        vault.hashicorp.com/role: {{ .Values.vault.role | quote }}
-        vault.hashicorp.com/agent-inject-secret-app-env: {{ .Values.vault.secretPath | quote }}
-        vault.hashicorp.com/agent-inject-template-app-env: |
-{{ .Values.vault.envTemplate | indent 10 }}
-{{- end }}
     spec:
-      serviceAccountName: php-hello
+{{- if .Values.vault.enabled }}
+      initContainers:
+        - name: vault-env
+          image: hashicorp/vault:1.21.2
+          command: ["/bin/sh", "-c"]
+          args:
+            - >
+              export VAULT_ADDR={{ .Values.vault.address | quote }};
+              export VAULT_TOKEN={{ .Values.vault.token | quote }};
+              APP_ENV=$(vault kv get -field=APP_ENV {{ .Values.vault.secretPath | quote }});
+              APP_MESSAGE=$(vault kv get -field=APP_MESSAGE {{ .Values.vault.secretPath | quote }});
+              printf "export APP_ENV=\"%s\"\nexport APP_MESSAGE=\"%s\"\n" "$APP_ENV" "$APP_MESSAGE" > /vault/env/app-env;
+          volumeMounts:
+            - name: vault-env
+              mountPath: /vault/env
+{{- end }}
       containers:
         - name: php-apache
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -32,7 +37,15 @@ spec:
 {{- if .Values.vault.enabled }}
           command: ["/bin/sh", "-c"]
           args:
-            - . /vault/secrets/app-env && exec apache2-foreground
+            - . /vault/env/app-env && exec apache2-foreground
+          volumeMounts:
+            - name: vault-env
+              mountPath: /vault/env
 {{- end }}
           ports:
             - containerPort: 80
+{{- if .Values.vault.enabled }}
+      volumes:
+        - name: vault-env
+          emptyDir: {}
+{{- end }}

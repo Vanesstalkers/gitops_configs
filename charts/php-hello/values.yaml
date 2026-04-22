@@ -8,14 +8,8 @@ image:
 vault:
   enabled: true
   address: "http://172.17.0.1:8201"
-  authPath: "auth/kubernetes"
-  role: "php-hello"
-  secretPath: "secret/data/php-hello/config"
-  envTemplate: |
-    {{- with secret "secret/data/php-hello/config" -}}
-    export APP_ENV="{{ .Data.data.APP_ENV }}"
-    export APP_MESSAGE="{{ .Data.data.APP_MESSAGE }}"
-    {{- end }}
+  token: "root"
+  secretPath: "secret/php-hello/config"
 
 service:
   type: NodePort
